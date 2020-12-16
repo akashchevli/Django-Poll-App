@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %} | Add Option {% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-4 mt-3">
+            <form method='POST'>
+            {% csrf_token %}
+                <h1>Add Option</h1>
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <div class="form-group">
+                    <label for="add_option" class="col-form-label">Choice:</label>
+                    <input type="text" name="add_option" class="form-control">
+                    </div>
+                <hr>
+                <input type="submit" value="Add Option" class="btn btn-block btn-secondary">
+                <hr>
+                
+            </form>
+        </div>
+    </div>
+<div>
+
+{% endblock %}

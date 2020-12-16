@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %} | Voting For  {{ question.question }} {% endblock %}
+{% block content %}
+
+<section id="dashboard" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 m-5">
+        <form action="{% url 'poll_voting' question.question_id %}" method="post">
+        {% csrf_token %}
+          <h4 style="color:orange"> Total Votes {{ total_voting }} </h4>
+          <br>
+          <h4>{{ question.question }}</h4>
+          {% for option in options %}
+            <input type="radio" name="option" value="{{ option.answer }}" required> {{ option.answer }}<br>
+          {% endfor %}
+          <br>
+            <input type="submit" name="vote" value="Vote" class="btn btn-primary">
+
+        </form>
+        <a href="{% url 'index' %}">
+            <input type="submit" name="cancel" value="Cancel" class="btn btn-warning">
+        </a>
+        </div>
+      </div>
+    </div>
+</section>
+
+{% endblock %}

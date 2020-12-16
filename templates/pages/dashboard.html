@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %} | {{ user.username }} Dashboard {% endblock %}
+
+{% block content %}
+
+{% include 'partials/_alerts.html' %}
+
+<section id="dashboard" class="py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <h2 align="center">Your Polls</h2>
+              <a class="btn btn-primary" href="{% url 'add_poll' %}">Add</a>
+            </li>
+          </ul>
+          <br>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <table class="table">
+              {% if question %}
+                {% for question in question %}
+                  {% if question.is_published == True %}
+                    <tbody>
+                    <tr>
+                      {% if user == question.by_publishe %}
+                        <td><a href="{% url 'poll_voting' question.question_id %}">{{ question.question }}</a>
+                        <footer class="text-muted">- From {{ question.by_publishe }}</footer></td>
+                        <td>
+                          <a href="{% url 'edit_poll' question.question_id %}"><i class="fa fa-pencil-square-o" style="font-size:32px;color:yellow"></i></a>   
+                          <a href="{% url 'poll_stop' question.question_id %}" onclick="return confirm('Are you sure?')"><i class="fa fa-stop-circle" style="font-size:32px;color:red"></i></a>                                       
+                        </td>
+                      {% endif %}
+                    </tr>
+                  {% else %}
+                    {% if user == question.by_publishe %}
+                      <tbody>
+                      <tr>
+                        <td><a href="{% url 'poll_stop' question.question_id %}">{{ question.question }}</a>&nbsp;<i class="fa fa-check-circle" style="font-size:20px;color:black"></i>
+                        <footer class="text-muted">- From {{ question.by_publishe }}</footer></td>
+                      </tr>
+                    {% endif %}  
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                <p>Latest polls not available</p>
+              {% endif %}
+            </table>
+            </li>
+          </ul>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {% if question.has_other_pages %}
+              <ul class="pagination">
+                {% if question.has_previous %}
+                  <li class="page-item">
+                    <a href="?page={{ question.previous_page_number }}" class="page-link">&laquo;</a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <a class="page-link">&laquo;</a>
+                  </li>
+                {% endif %}
+                {% for i in question.paginator.page_range %}
+                  {% if question.number == i %}
+                    <li class="page-item active">
+                      <a class="page-link">{{i}}</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item">
+                      <a href="?page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                  {% endif %}
+               {% endfor %}
+                {% if question.has_next %}
+                  <li class="page-item">
+                    <a href="?page={{ question.next_page_number }}" class="page-link">&raquo;</a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <a class="page-link">&raquo;</a>
+                  </li>
+                {% endif %}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    
+</section>
+
+{% endblock %}
